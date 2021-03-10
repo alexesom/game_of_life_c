@@ -1,21 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "struct.h"
 
-struct elem{
-    int live;
-};
-
-struct map{
-    int n;
-    int m;
-    struct elem **arr;
-};
-
-void evolve(struct map* cur) {
-    struct elem **new;
-    new = (struct elem**)malloc(sizeof(struct elem*) * cur->n);
+void evolve(map* cur) {
+    elem **new;
+    new = (elem**)malloc(sizeof(elem*) * cur->n);
     for (int i = 0; i < cur->n; i++) {
-        new[i] = (struct elem*)malloc(sizeof(struct elem*) * cur->m);
+        new[i] = (elem*)malloc(sizeof(elem*) * cur->m);
         for (int j = 0; j < cur->m; j++) {
             int cnt = 0;
             if (i > 0) {
@@ -28,11 +19,11 @@ void game() {
 
 }
 int main() {
-    /*struct map a;
+    /*map a;
     scanf("%d %d", &a.n, &a.m);
-    a.arr = (struct elem**)(malloc(sizeof(struct elem*) * a.n));
+    a.arr = (elem**)(malloc(sizeof(elem*) * a.n));
     for (int i = 0; i < a.n; i++) {
-        a.arr[i] = (struct elem*)malloc(sizeof(struct elem*) * a.m);
+        a.arr[i] = (elem*)malloc(sizeof(elem*) * a.m);
         for (int j = 0; j < a.m; j++) {
             a.arr[i][j].live = 0;
             printf("%d ", a.arr[i][j].live);
