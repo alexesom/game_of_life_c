@@ -30,7 +30,7 @@ void evolve(map* cur) {
             if (nieghnors == 3) {
                 new[i][j].live = 1;
             }
-            if (nieghnors < 2 && nieghnors > 3) {
+            if (nieghnors < 2 || nieghnors > 3) {
                 new[i][j].live = 0;
             }
         }
