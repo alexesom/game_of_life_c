@@ -40,7 +40,7 @@ void game() {
 
 }
 int main() {
-    map a;
+    /*map a;
     scanf("%d %d", &a.n, &a.m);
     a.arr = (elem**)(malloc(sizeof(elem*) * a.n));
     for (int i = 0; i < a.n; i++) {
@@ -56,6 +56,6 @@ int main() {
             printf("%d ", a.arr[i][j]);
         }
         printf("\n");
-    }
+    }*/
     return 0;
 }
