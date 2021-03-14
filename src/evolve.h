@@ -1,8 +1,8 @@
-//
-// Created by eugene on 3/11/21.
-//
+#include "struct.h"
 
-#ifndef CMAKE_TESTAPP_EVOLVE_H
-#define CMAKE_TESTAPP_EVOLVE_H
+#ifndef PW_GAME_OF_LIFE_EVOLVE_H
+#define PW_GAME_OF_LIFE_EVOLVE_H
 
-#endif //CMAKE_TESTAPP_EVOLVE_H
+void evolve(Map);
+
+#endif 

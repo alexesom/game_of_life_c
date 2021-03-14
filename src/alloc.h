@@ -1,10 +1,10 @@
-#include "struct.h"
+#include "array_functions.h"
 
-#ifndef CMAKE_TESTAPP_ALLOC_H
-#define CMAKE_TESTAPP_ALLOC_H
+#ifndef PW_GAME_OF_LIFE_ALLOC_H
+#define PW_GAME_OF_LIFE_ALLOC_H
 
-elem** get_memory(elem **arr, int n, int m);
+Map alloc_Map(elem ** matrix, int rows, int columns);
 
-Image * alloc_Image(const )
+Image alloc_Image(const char *, char *, int, int, int, int);
 
 #endif

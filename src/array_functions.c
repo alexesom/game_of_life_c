@@ -1,3 +1,5 @@
+#include "array_functions.h"
+
 unsigned char * array2pixel_transform(const void * initial_array, int number_of_pixels, int channels) 
 {    
     unsigned char *new_array = (unsigned char *)calloc(sizeof(unsigned char), number_of_pixels * channels);

@@ -1,4 +1,4 @@
-#include "alloc.h"
+#include "save2image.h"
 
 #define STB_IMAGE_IMPLEMENTATION
 

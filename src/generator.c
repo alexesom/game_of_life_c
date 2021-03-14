@@ -1,18 +1,20 @@
 #include "generator.h"
-#include <stdio.h>
 
-void generate(map* cur) {
+void generate(Map board) 
+{
     int x = rand();
-    int y;
-    cur->n = x % 10 + 1;
+
+    board->rows = x % 10 + 1;
     x = rand();
-    cur->m = x % 10 + 1;
-    cur->arr = get_memory(cur->arr, cur->n, cur->m);
-    for (int i = 0 ; i < cur->n; i++) {
-        for (int j = 0; j < cur->m; j++) {
+
+    board->columns = x % 10 + 1;
+    board->matrix = alloc_Map(board->matrix, board->rows, board->columns);
+
+    for (int i = 0 ; i < board->rows; i++) 
+        for (int j = 0; j < board->columns; j++) 
+        {
             x = rand();
             x %= 4;
-            cur->arr[i][j].live = x == 0 ? 1 : 0;
+            board->matrix[i][j].is_live = x == 0 ? 1 : 0;
         }
-    }
 }

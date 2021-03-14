@@ -1,4 +1,8 @@
-#ifndef CMAKE_TESTAPP_NIEGHBORS_H
-#define CMAKE_TESTAPP_NIEGHBORS_H
+#include "struct.h"
 
-#endif 
+#ifndef PW_GAME_OF_LIFE_NIEGHBOURS_H
+#define PW_GAME_OF_LIFE_NIEGHBOURS_H
+
+int calc_nieghbors(Map, int, int);
+
+#endif
