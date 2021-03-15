@@ -1,7 +1,7 @@
 #include "array_functions.h"
 #include "evolve.h"
 #include "save2image.h"
-#include "nieghbors.h"
+#include "nieghbours.h"
 #include "tester.h"
 #include "generator.h"
 

@@ -1,6 +1,6 @@
 #include "nieghbors.h"
 
-int calc_nieghbors(Map board, int i, int j) 
+int calculate_neighbors(Map board, int i, int j) 
 {
     int counter = 0;
     if (i > 0) 
