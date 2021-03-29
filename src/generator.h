@@ -1,10 +1,11 @@
+#ifndef CMAKE_TESTAPP_GENERATOR_H
+#define CMAKE_TESTAPP_GENERATOR_H
+
+#include "struct.h"
+#include <stdlib.h>
 #include <time.h>
 #include "alloc.h"
 
-#ifndef PW_GAME_GENERATOR_H
-#define PW_GAME_GENERATOR_H
-
-void generate(Map board);
+void generate(map *cur);
 
 #endif
-
