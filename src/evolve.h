@@ -1,8 +1,9 @@
-#include "nieghbours.h"
+#include "struct.h"
+#include "neighbours.h"
 
 #ifndef PW_GAME_OF_LIFE_EVOLVE_H
 #define PW_GAME_OF_LIFE_EVOLVE_H
 
-void evolve(Map);
+int evolve(Map board);
 
 #endif 

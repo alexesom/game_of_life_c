@@ -1,0 +1,4 @@
+[Config]
+dimensions = [ 15, 15 ]
+active-tiles =  [ [ 1, 0 ], [ 2, 1 ], [ 0, 2 ], [ 1, 2 ], [ 2, 2 ] ]
+generations = 60

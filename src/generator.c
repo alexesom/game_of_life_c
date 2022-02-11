@@ -1,20 +1,40 @@
 #include "generator.h"
+#include "time.h"
 
-void generate(Map board) 
+void generate(Map board, int seed, int chance) 
 {
-    int x = rand();
+    if(seed == 0)
+        srand(time(NULL));
+    else 
+        srand(seed);
 
-    board->rows = x % 10 + 1;
-    x = rand();
-
-    board->columns = x % 10 + 1;
-    board->matrix = alloc_Map(board->matrix, board->rows, board->columns);
+    int x = 0;
+    double int_max = 2147483647.0;
 
     for (int i = 0 ; i < board->rows; i++) 
         for (int j = 0; j < board->columns; j++) 
         {
             x = rand();
-            x %= 4;
-            board->matrix[i][j].is_live = x == 0 ? 1 : 0;
+            board->old_matrix[i][j].is_live = ((double)x <= int_max * (double)chance/100 ) ? 1 : 0;
         }
+    
+}
+
+void generate_from_conf(Map board, Config config)
+{
+    at_list_t * active = config->active_tiles;
+
+    for (int i = 0 ; i < board->rows; i++) 
+    {
+        for (int j = 0; j < board->columns; j++)
+        {
+            board->old_matrix[i][j].is_live = 0;
+        }
+    }
+
+    while(active != NULL)
+    {
+        board->old_matrix[active->y][active->x].is_live = 1;
+        active = active->next;
+    }
 }

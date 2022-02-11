@@ -1,0 +1,290 @@
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{polski}
+\usepackage{lastpage}
+\usepackage{fancyhdr}
+\usepackage{forest}
+\graphicspath{ {./spr_img/} }
+
+% numery strony "x / lastpage"
+\pagestyle{fancy}
+\fancyhf{}
+\cfoot{\thepage \hspace{1pt} / \pageref{LastPage}}
+% żeby też było na pierwszej stronie
+\fancypagestyle{plain}{
+	\fancyhf{}
+	\cfoot{\thepage \hspace{1pt} / \pageref{LastPage}}
+}
+
+\title{Sprawozdanie końcowe z projektu Gra w życie}
+\author{Aliaksei Samovich, Hubert Kalbarczyk}
+\date{Kwiecień 2021}
+
+\begin{document}
+
+\maketitle
+\pagenumbering{gobble}
+\newpage
+\pagenumbering{arabic}
+
+\section{Cel projektu}
+
+\paragraph{Implementacja Gry w życie}
+
+Naszym podstawowym celem była implementacja podstawowej logiki gry w życie z standartowymi zasadami.
+
+\subparagraph{\large Zasady Standardowe}
+\begin{itemize}
+\item 
+Sąsiedztwo Moore’a
+    
+\item
+Martwa komórka, która ma dokładnie 3 żywych sąsiadów, staje się żywa w następnej jednostce czasu (rodzi się)
+    
+\item
+Żywa komórka z 2 albo 3 żywymi sąsiadami pozostaje nadal żywa; przy innej liczbie sąsiadów umiera (z „samotności” albo „zatłoczenia”)
+    
+\end{itemize}
+
+\subparagraph{\large Ustawienia obowiązkowe}
+\begin{itemize}
+\item
+Wyświetlenie kolejnych generacji w terminale
+
+\item 
+Możliwość podania argumentów wywołania przy uruchomieniu w terminale
+
+\item
+Możliwość zapisywania podanych generacji do pliku
+
+\item
+Możliwość wywołania programu Step-by-Step i Silent
+
+\end{itemize}
+
+\subparagraph{\large Ustawienia dodatkowe}
+\begin{itemize}
+\item 
+Możliwość zapisywania podanych generacji w postaci obrazku (.jpg albo .png) 
+
+\item
+Możliwość zapisywania procesu gry w postaci .gif
+
+\item
+Stworzenie pliku konfiguracyjnego dla wygodnego odczytywania potrzebnych generacji
+
+\end{itemize}
+    
+
+\section{Dane wejściowe}
+
+By program mógł zacząć działanie należy podać mu odpowiednio sformatowany plik z konfiguracją.
+Ma ona być podana w pliku TOML w sekcji [Config].
+
+\newpage
+
+\section{Argumenty wywołania}
+
+Następujące argumenty wywołania są akceptowane przez program \texttt{clife}:
+
+\begin{itemize}
+
+\item
+\texttt{--config path} przy tym parametrze należy podać ścieżkę do pliku z konfiguracją w formacie TOML.
+Pod \textit{path} należy podstawić ścieżkę, najlepiej objętą symbolami " " aby uniknąć błędów.
+Bez podania tego argumentu program zwróci błąd i przerwie działanie.
+Jeżeli ścieżka będzie niepoprawna to program także zwróci błąd i przerwie działanie.
+
+\item
+\texttt{--save path} pozwala na wybór ścieżki zapisu.
+Będą tam zapisywane konfiguracje z danej generacji oraz obrazy przedstawiające każdą generację.
+Pliki będą nazwane od generacji.
+Pod \textit{path} należy podstawić ścieżkę, najlepiej objętą symbolami " " aby uniknąć błędów.
+Jeśli ścieżka nie zostanie odnaleziona lub będzie niepoprawna to program nie rozpocznie symulacji i pokaże błąd.
+
+\item
+\texttt{--save-gen gen\_num} pozwala na zapisanie generacji w postaci pliku TOML.
+Ten plik będzie można użyć jako konfigurację innego uruchomienia programu.
+Zostanie też zapisana ilość generacji pozostałych do końca.
+Pod \textit{gen\_num} należy podstawić numery generacji do zapisania.
+Jeżeli nie podamy żadnych generacji to zostaną zapisane wszystkie.
+Jeśli podana generacja nie będzie w zakresie symulacji to zostanie pominięta.
+
+\item
+\texttt{--save-img gen\_num} pozwala na zapisanie generacji w postaci pliku png do podanego w \texttt{--save} miejsca.
+Pod \textit{gen\_num} należy podstawić numery generacji do zapisania.
+Jeżeli nie podamy żadnych generacji to zostaną zapisane wszystkie.
+Jeśli podana generacja nie będzie w zakresie symulacji to zostanie pominięta.
+
+\item
+\texttt{--step-by-step} uruchamia program w trybie \textit{krok po kroku}.
+Pozwala to na lepsze przyjrzenie się poszczególnym generacją.
+Za pomocą naciśnięcia klawisza enter można przejść do kolejnej generacji.
+
+\item
+\texttt{--silent} program nie będzie wypisywał do konsoli każdej generacji przedstawionej w postaci pola które składa się z białych i czarnych komórek.
+
+\item
+\texttt{--save-gif} zapisuje gif z animacją symulacji w podanej ścieżce
+\end{itemize}
+\subsection{Przykłady uruchomienia programu}
+Przykładowe wywołanie programu:
+
+\texttt{./game.out --config ./tests/glider\_gun.toml --save ./src/result\_files/ --save-gen "5 20 40" --save-gif}
+
+Efektem tego wywołania będzie powstanie w miejscu zapisu 3 konfiguracji pozwalających na  kontynuację symulacji od danego momentu.
+Oraz gif zawierający całą symulację.
+
+\begin{figure}
+\centering
+\includegraphics[scale=3]{img_60}
+\caption{60 klatka gifa przedstawiającego symulację}
+\centering
+\end{figure}
+
+\section{Drzewo katalogów}
+
+\begin{forest}
+  for tree={
+    font=\ttfamily,
+    grow'=0,
+    child anchor=west,
+    parent anchor=south,
+    anchor=west,
+    calign=first,
+    edge path={
+      \noexpand\path [draw, \forestoption{edge}]
+      (!u.south west) +(7.5pt,0) |- node[fill,inner sep=1.25pt] {} (.child anchor)\forestoption{edge label};
+    },
+    before typesetting nodes={
+      if n=1
+        {insert before={[,phantom]}}
+        {}
+    },
+    fit=band,
+    before computing xy={l=15pt},
+  }
+[2021L\_JIMP2\_proj\_zesp\_gr14
+  [src
+    [gifenc]
+    [result\_files]
+    [stb\_image]
+    [toml]
+  ]
+  [bin]
+  [tests]
+]
+\end{forest}
+
+\paragraph{\large Szczegóły}
+\begin{itemize}
+    \item 
+    \textbf{2021L\_JIMP2\_proj\_zesp\_gr14} - główny katalog w którym są niezbędne katalogi projektowe takie pliki jak Makefile, .gitignore, specyfikację, plik wykonawczy (po montażu) i inne
+
+    \item
+    \textbf{src} - katalog w którym są wszystkie moduły implementacyjne i katalogi które są niezbędne dla wywołania programu
+    
+    \begin{itemize}
+        \item 
+        \textbf{gifenc} - katalog z biblioteką implementującej zapisywanie do .gif przy podaniu tablicy jednowymiarowej komórek
+        
+        \item
+        \textbf{result\_file} - katalog w którym są wszystkie pliki wynikowe po wywołaniu programu (pliki tekstowe (.txt), obrazki (.jpg, .png), animacja (.gif))
+        
+        \item
+        \textbf{stb\_image} - katalog z biblioteką z funkcjami dla zapisywania sformatowanej w odpowiedny sposób tablicy jednowymiarowej w obrazek .png albo .jpg
+        
+        \item
+        \textbf{toml} - katalog z biblioteką niezbędną dla implementacji parsera configuracyjnego 
+    \end{itemize}
+    
+    \item
+    \textbf{bin} - katalog w którym są przechowywane czasowe pliki obiektowe (tz. pliki z rozszerzeniem .o) niezbędne dla kompilacji w plik wykonawczy
+    
+    \item
+    \textbf{tests} - katalog w którym są testowe pliki konfiguracyjne
+    
+\end{itemize}
+\section{Komunikaty błędów}
+
+Program wypisuje do konsoli komunikaty o błędach w czytelnej postaci.
+Czyli np. jeżeli nie uda mu się odczytać jakiejś wartości z Config albo z podanych argumentów to powinien nas o tym poinformować i podać co się nie udało.
+
+\section{Testy}
+Testy naszego programu niestety wymagają dodania w main ponieważ nie są skierowane do użytkownika.
+Są to specjalne funkcje testujące wczytanie pliku konfiguracyjnego, odczytanie argumentów.
+Patrząc na to teraz zmienilibyśmy je na automatyczne lub uruchamiane przez specjalny argument.
+
+\section{Zmiany względem specyfikacji}
+\begin{itemize}
+\item
+Pojawił się dodatkowy  argument wywołania \texttt{--save-gif} odpowiadający za zapisanie gifa z całą symulacją.
+
+\item
+Program wywołuje się poprzez wpisanie \texttt{game.out} a nie \texttt{clife}.
+
+\item
+Generacje w konsoli są przedstawiane jako białe prostokąty i puste miejsca a nie X i O.
+
+\item
+Struktura zawarta w specyfikacji implementacyjnej jest w dużym stopniu niezgodna z rzeczywistym stanem projektu.
+
+\item
+Istnieje możliwość zapisania symulacji do pliku gif co nie było planowane.
+\end{itemize}
+
+\section{Współpraca}
+\paragraph{Systeme zażądzania}
+    Zdecydowaliśmy się używać tabelę Trello żeby ułatwić współprace która ma 3 sekcję: TO DO, DONE i In Progress
+\paragraph{Podzielenie pracy}
+\begin{itemize}
+    \item 
+    Podstawowa logika gry (ewolucja generacji, obliczenie ilości sąsiedzi dla komórki, generator dla testowania)  - Aliaksei
+    \item 
+    Zapisywanie do obrazku oraz gif - Aliaksei
+    \item
+    Makefile - Aliaksei
+    \item
+    Wyczyszczenie pamięci - Aliaksei
+    \item 
+    Alokacja pamięci - Aliaksei (dla Map i Image), Hubert (dla parsera toml oraz parsera argumentów wywołania)
+    \item
+    Zapisywanie Configu z danej generacji - Aliaksei
+    \item
+    Zapisywanie Mapy do pliku tekstowego (implementacja oraz testy) - Aliaksei
+    \item 
+    Parser konfiguracyjny (testy, parser, wczytywanie do struktury) - Hubert
+    \item 
+    Parser argumentów wywołania (testy, parser, wczytywanie do struktury) - Hubert
+    \item 
+    Tryby Step-by-Step i Silent - Hubert
+    
+\end{itemize}
+
+\paragraph{Problemy}
+Mieliśmy problemy we współpracę przy robieniu Makefile dla tego, że pracujemy w różnych środowiskach deweloperskich
+
+\section{Podsumowanie i wnioski}
+
+Przy projektach takiej wielkości nie da się już efektywnie pracować skokowo na ostatni moment.
+Przekonaliśmy się o tym sami ponieważ większość niedociągnięć i błędów w naszej pracy właśnie z tego wynikała.
+
+Jeśli chodzi o sam temat to był on dosyć ciekawy i angażujący.
+Oferował on satysfakcjonującą wizualizację naszej pracy w postaci obrazków z generacjami.
+
+ 
+\textbf{Wnioski:}
+ 
+ \begin{itemize}
+ \item
+ Dokładnie wykonana specyfikacja implementacyjna może zaoszczędzić wiele czasu przy pisaniu kodu.
+ 
+ \item
+ Przy większych projektach trzeba pracować regularnie a nie w skokach tak jak my to robiliśmy.
+ Pomaga to z poprawianiem błędów i wymyślaniem rozwiązań.
+ 
+ \item
+ Trzeba dokładnie rozplanowywać jaka praca jest do wykonania
+ \end{itemize}
+
+\end{document}

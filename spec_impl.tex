@@ -1,0 +1,75 @@
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{polski}
+\usepackage{lastpage}
+\usepackage{fancyhdr}
+
+% numery strony "x / lastpage"
+\pagestyle{fancy}
+\fancyhf{}
+\cfoot{\thepage \hspace{1pt} / \pageref{LastPage}}
+% żeby też było na pierwszej stronie
+\fancypagestyle{plain}{
+	\fancyhf{}
+	\cfoot{\thepage \hspace{1pt} / \pageref{LastPage}}
+}
+
+\title{Symulacja gry w życie Conowaya: \texttt{clife}\\
+Specyfikacja implementacyjna}
+\author{
+	Hubert Kalbarczyk\\
+	\and
+	Aliaksei Samovich\\
+}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+\section{Istniejące katalogi}
+\texttt{bin/} - katalog z plikami dla wywołania\\\\
+\texttt{src/} - katalog z plikami nagłówkowymi oraz modułami projektu\\\\
+\texttt{configs/} - katalog z plikami konfiguracyjnymi w TOML\\\\
+\texttt{tests/} - katalog z plikami testowymi\\\\
+\texttt{output/} - katalog z utworzonymi obrazkami podanych generacji oraz pliki tekstowe które zostały stworzone jako wynik gry po \textbf{n} generacjach\\\\
+
+Plik \textbf{makefile}
+
+\section{Moduły programu}
+\subsection{Sterowanie}
+ \texttt{main.c} - główny plik sterowniczy do którego łączymy inne pliki projektowe 
+
+\subsection{Opis struktur głównych}
+\begin{itemize}
+    \item \texttt{struct.c (.h)} - plik ze wszystkimi strukturami w projekcie
+\end{itemize}
+
+\subsection{Alokator pamięci dla struktur}
+\begin{itemize}
+    \item \texttt{alloc.c (.h)} - plik w którym są funkcje alokujące pamięć dla struktur
+\end{itemize}
+    
+\subsection{Moduły generujące}
+\begin{itemize}
+    \item \texttt{evolve.c (.h)} - plik w którym są funkcje symulujące grę w życie
+    \item \texttt{neighbours.c (.h)} - plik z funkcjami do wyznaczania sąsiedztwa podanej komórki
+    \item \texttt{border.c (.h)} - plik z funkcjami do obliczenia czy komórka wyszła za granicę
+\end{itemize}
+
+\subsection{Moduły wyjściowe}
+\begin{itemize}
+    \item \texttt{save2png.c (.h)} - plik z funkcjami które przetwarzają podaną planszę w obrazek \textbf{.png}
+    \item \texttt{save2txt.c (.h)} - plik z funkcjami które przetwarzają podaną planszę w plik tekstowy \textbf{.txt}
+    
+\end{itemize}
+
+\section{Etapy wykonania}
+\textbf{1. Alokacja pamięci (alloc.c)}\\\\
+\textbf{2. Czytanie konfiguracji}\\\\
+\textbf{3. Generowanie i iterowanie pokoleń}\\\\
+\textbf{4. Zapis wyników w pliki zgodnie z konfiguracją}\\\\
+\textbf{5. Zapis wyników w pliki zgodnie z konfiguracją}\\\\
+
+    
+
+ \end{document}

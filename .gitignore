@@ -52,5 +52,23 @@ Mkfile.old
 dkms.conf
 
 **/CMakeLists.txt
+CMakeLists.txt
 cmake-build-debug-wsl/
 cmake-build-debug/
+.idea/
+.vscode/
+
+result_files/*
+
+spec_fun.pdf
+spec_fun.synctex.gz
+spec_fun.aux
+spec_fun.log
+spec_impl.pdf
+spec_impl.synctex.gz
+spec_impl.aux
+spec_impl.log
+sprawozdanie.pdf
+sprawozdanie.synctex.gz
+sprawozdanie.aux
+sprawozdanie.log

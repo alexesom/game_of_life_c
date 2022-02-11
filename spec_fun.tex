@@ -1,0 +1,157 @@
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{polski}
+\usepackage{lastpage}
+\usepackage{fancyhdr}
+
+% numery strony "x / lastpage"
+\pagestyle{fancy}
+\fancyhf{}
+\cfoot{\thepage \hspace{1pt} / \pageref{LastPage}}
+% żeby też było na pierwszej stronie
+\fancypagestyle{plain}{
+	\fancyhf{}
+	\cfoot{\thepage \hspace{1pt} / \pageref{LastPage}}
+}
+
+\title{Symulacja gry w życie Conowaya: \texttt{clife}}
+\author{
+	Hubert Kalbarczyk\\
+	\and
+	Aliaksei Samovich\\
+}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Cel projektu}
+
+Celem naszego projektu jest umożliwienie użytkownikowi symulacji gry w życie Conowaya.
+Ma on mieć możliwość \textbf{stworzenia konfiguracji} (rozmiar planszy, ustawienia startowe komórek itd.) według, której program zacznie symulację.
+Ma także móc \textbf{zapisać wynik} i poszczególne kroki jako sekwencje obrazów.
+Sama symulacja ma mieć tryb automatyczny i \textbf{tryb \textit{krok po kroku}}, gdzie użytkownik będzie ręcznie kontynuował każdą generację.
+Podczas pracy program będzie też wyświetlał każdą generację w konsoli jako planszę znaków "X" i "O", odpowiednio "martwa" i "żywa".
+
+\section{Dane wejściowe}
+
+By program mógł zacząć działanie należy podać mu odpowiednio sformatowany plik z konfiguracją.
+Ma ona być podana w pliku TOML w sekcji [Config].
+
+\begin{itemize}
+
+\item
+Wymiary planszy podane w ilości komórek.
+Plansza ma punkt [ 0, 0 ] w lewym górnym rogu i punkt [ x, y ] w prawym dolnym.
+Oznacza to, że plansza 50 x 50 ma w współrzędne od [ 0, 0 ] do [ 49, 49 ].
+
+Format: dimensions = [ x, y ]
+
+\item
+Pola, które mają być aktywowane w generacji 0, czyli na starcie.
+Podane w postaci punktów w wektorze.
+Punkty nie znajdujące się na planszy zostaną pominięte, zostanie o tym wypisany komunikat.
+
+Format: active-tiles = [ [ $x_1$, $y_1$ ], [ $x_2$, $y_2$ ] ]
+
+\item
+Ilość generacji do symulowania podana w postaci liczby naturalnej dodatniej.
+Liczby ujemne nie będą brane pod uwagę i spowodują zatrzymanie pracy programu.
+
+Format: generations = n
+
+\end{itemize}
+Przykładowy plik konfiguracyjny tworzący planszę 50 na 50 komórek z Gliderem lecącym przez 25 generacji.
+
+\begin{verbatim}
+[Config]
+dimensions = [ 50, 50 ]
+active-tiles = [ [ 1, 0 ], [ 2, 1 ], [ 0, 2 ], [ 1, 2 ], [ 2, 2 ] ]
+generations = 25
+\end{verbatim}
+
+\section{Argumenty wywołania programu}
+
+Następujące argumenty wywołania są akceptowane przez program \texttt{clife}:
+
+\begin{itemize}
+
+\item
+\texttt{--config path} przy tym parametrze należy podać ścieżkę do pliku z konfiguracją w formacie TOML.
+Pod \textit{path} należy podstawić ścieżkę, najlepiej objętą symbolami " " aby uniknąć błędów.
+Bez podania tego argumentu program zwróci błąd i przerwie działanie.
+Jeżeli ścieżka będzie niepoprawna to program także zwróci błąd i przerwie działanie.
+
+\item
+\texttt{--save path} pozwala na wybór ścieżki zapisu.
+Będą tam zapisywane konfiguracje z danej generacji oraz obrazy przedstawiające każdą generację.
+Pliki będą nazwane od generacji.
+Pod \textit{path} należy podstawić ścieżkę, najlepiej objętą symbolami " " aby uniknąć błędów.
+Jeśli ścieżka nie zostanie odnaleziona lub będzie niepoprawna to program nie rozpocznie symulacji i pokaże błąd.
+
+\item
+\texttt{--save-gen gen\_num} pozwala na zapisanie generacji w postaci pliku TOML.
+Ten plik będzie można użyć jako konfigurację innego uruchomienia programu.
+Zostanie też zapisana ilość generacji pozostałych do końca.
+Pod \textit{gen\_num} należy podstawić numery generacji do zapisania.
+Jeżeli nie podamy żadnych generacji to zostaną zapisane wszystkie.
+Jeśli podana generacja nie będzie w zakresie symulacji to zostanie pominięta.
+
+\item
+\texttt{--save-img gen\_num} pozwala na zapisanie generacji w postaci pliku png do podanego w \texttt{--save} miejsca.
+Pod \textit{gen\_num} należy podstawić numery generacji do zapisania.
+Jeżeli nie podamy żadnych generacji to zostaną zapisane wszystkie.
+Jeśli podana generacja nie będzie w zakresie symulacji to zostanie pominięta.
+
+\item
+\texttt{--step-by-step} uruchamia program w trybie \textit{krok po kroku}.
+Pozwala to na lepsze przyjrzenie się poszczególnym generacją.
+Za pomocą naciśnięcia klawisza enter można przejść do kolejnej generacji.
+
+\item
+\texttt{--silent} program nie będzie wypisywał do konsoli każdej generacji przedstawionej w "X" i "O".
+\end{itemize}
+Przykładowe wywołanie programu:
+
+\begin{verbatim}
+clife --config konfig/glider.toml --save saves/glider/ --save-gen 5 20 40
+\end{verbatim}
+
+\section{Teoria}
+
+Gra w życie Conowaya przedstawiana jest jako automat komórkowy w którym każda komórka może mieć 2 stany,
+martwy (biały) i żywy (czarny).
+Taki automat przechowuje siatkę komórek i zarządza ich stanami według ustalonych reguł.
+W naszym przypadku są to 2 reguły:
+\begin{enumerate}
+\item
+Martwa komórka otoczona przez 3 żywe komórki staje się żywa.
+\item
+Żywa komórka potrzebuje w otoczeniu 2 lub 3 żywe komórki, w przeciwnym wypadku staje się martwa.
+\end{enumerate}
+Komórki otaczające rozumiane są przez sąsiedztwo Moora.
+Oznacza to, że każda komórka sąsiaduje z 8 innymi.
+Jeśli jednak komórka leży na krawędzi planszy to przestrzeń poza nią jest uznawana za martwą.
+
+\section{Komunikaty błędów}
+
+Program wyświetla następujące komunikaty o błędach:
+\begin{itemize}
+\item
+Niepoprawna ścieżka zapisu/konfiguracji:
+Program nie znalazł podanej przez nas ścieżki lub nie była ona folderem.
+W tym wypadku nie będzie kontynuowana praca programu.
+
+\item
+Niepoprawny argument:
+Któryś z podanych przez nas argumentów wywołania nie został rozpoznany
+
+\item
+Niepoprawnie sformatowana konfiguracja:
+Ten komunikat pojawi się jeśli program napotka problem podczas przetwarzania podanej przez nas konfiguracji.
+Należy się upewnić, że jest ona w pliku .toml oraz zawiera wszystkie elementy wymienione w sekcji 2.
+
+\end{itemize}
+
+\end{document}
